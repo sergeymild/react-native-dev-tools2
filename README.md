@@ -1,21 +1,47 @@
-# react-native-dev
+# react-native-dev-tools
 
-Dev
+React Native dev tools
 
 ## Installation
+```json
 
-```sh
-npm install react-native-dev
+[//]: # package.json
+
+"react-native-dev-tools": "https://github.com/sergeymild/react-native-dev-tools2#0.1.0"
 ```
+
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-dev';
+import {nativeDevTools} from 'react-native-dev-tools';
 
 // ...
 
-const result = await multiply(3, 7);
+const enableFileLog = async () => {
+  if (!config.isDevelopment) return;
+  await nativeDevTools.setup({
+    // enabled of disabled logging
+    enabled: true,
+    // save logs between sessions
+    preserveLog: false,
+    onShake: () => {
+      Alert.alert('Dev menu', undefined, [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Send',
+          style: 'default',
+          onPress: async () => {
+            const sendResult = await nativeDevTools.sendDevLogsToDiscord({
+              discord: { webhook: 'webhookUrl'},
+            });
+          },
+        },
+      ]);
+    },
+  });
+};
+
 ```
 
 ## Contributing
@@ -25,7 +51,3 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
