@@ -10,6 +10,7 @@ import type {
 } from './types';
 import { uploadToSlack } from './slack';
 import { uploadToDiscord } from './discord';
+import { onFbPress } from "src/utils/social.utils.ts";
 
 interface IDevTools {
   writeLog(message: string): void;
@@ -74,10 +75,16 @@ class _DevTools {
     onShake?: () => void;
     overrideLogs?: boolean;
   }) {
-    console.log('🍓[Index.setup]', options);
+    console.log('🍓[Index.setup]', options, DevTools);
     if (!options.enabled) return;
     if (options.onShake) {
-      await DevTools.enableShaker(true, !options.preserveLog);
+      if (Platform.OS === 'android') await DevTools.enableShaker(true, !options.preserveLog);
+      else {
+        if (!options.preserveLog) {
+          nativeDevTools.deleteLogFile()
+          DevTools.enableShaker(true)
+        }
+      }
     }
     this.onShake = options.onShake;
 

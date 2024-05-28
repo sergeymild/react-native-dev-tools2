@@ -174,7 +174,7 @@ static void install(jsi::Runtime &jsiRuntime, DevToolsModule *module) {
     [handle closeFile];
 }
 
-- (void)enableShaker:(BOOL)enable {
+RCT_EXPORT_METHOD(enableShaker:(BOOL)enable) {
     [NSNotificationCenter.defaultCenter removeObserver:self name:@"shakeDetected" object:nil];
     _shake = nil;
     if (enable) {
