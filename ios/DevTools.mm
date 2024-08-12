@@ -174,22 +174,26 @@ static void install(jsi::Runtime &jsiRuntime, DevToolsModule *module) {
     [handle closeFile];
 }
 
-RCT_EXPORT_METHOD(enableShaker:(BOOL)enable) {
-    [NSNotificationCenter.defaultCenter removeObserver:self name:@"shakeDetected" object:nil];
-    _shake = nil;
-    if (enable) {
-        _shake = [[RNShakeEvent alloc] init];
-        [NSNotificationCenter.defaultCenter addObserver:self selector:SEL("didShake") name:@"shakeDetected" object:nil];
-    }
-}
-
-
 - (NSArray<NSString *> *)supportedEvents {
     return @[@"DevToolsData"];
 }
 
--(void) didShake {
+-(void) didShakeApp {
+    NSLog(@"shake");
     [self sendEventWithName:@"DevToolsData" body:nil];
+}
+
+RCT_EXPORT_METHOD(enableShaker:(BOOL)enable) {
+    [NSNotificationCenter.defaultCenter removeObserver:self 
+                                                  name:@"shakeDetected"
+                                                object:nil];
+    _shake = nil;
+    if (enable) {
+        _shake = [[RNShakeEvent alloc] init];
+        [NSNotificationCenter.defaultCenter addObserver:self 
+                                               selector:@selector(didShakeApp) name:@"shakeDetected"
+                                                 object:nil];
+    }
 }
 
 @end
